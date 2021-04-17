@@ -1,0 +1,20 @@
+.MuiCard-root {
+  box-shadow: rgba(0, 0, 0, 0.2) 0.3rem 0.3rem;
+}
+
+header {
+  padding: 2rem;
+  width: 100%;
+}
+
+.MuiTypography-root {
+  font-weight: 300;  
+}
+
+a {
+  text-decoration: none;
+}
+
+body, html, p {
+  font-family: 'Asap';
+}
