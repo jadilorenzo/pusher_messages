@@ -18,7 +18,7 @@ export const post = async (part: string, json: any) => {
     })
         .then((r) => {
             const response = r.json()
-            console.log(response)
+            console.log("API", part, response)
             return response
         })
 }

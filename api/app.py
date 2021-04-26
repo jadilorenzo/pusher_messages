@@ -37,9 +37,18 @@ def get_db():
     finally:
         db.close()
 
+
+class UserIsActive(BaseModel):
+    username: str
+
 @app.get("/")
 def get_root(db: Session = Depends(get_db)):
-    user = get_user(db, 1)
+    return get_user(db, "Jacob Di Lorenzo")
+
+@app.post("/is_active/")
+def get_activity_of_user(body: UserIsActive, db: Session = Depends(get_db)):
+    user = get_user(db, body.username)
+    print(user.is_active)
     return user
 
 class UserLogin(BaseModel):

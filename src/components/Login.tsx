@@ -1,20 +1,22 @@
-import React, { useContext, useState } from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Route, useHistory } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 import FormGroup from '@material-ui/core/FormGroup'
 import { TextField, Button } from '@material-ui/core'
 import { AppContext } from '../AppContext'
 
 const LoginPage = () => {
-    const {username, setUsername, password, setPassword, login} = useContext(AppContext)
-    const [redirect, setRedirect] = useState<boolean>()
-
-    if (redirect) {
-        return <Redirect to='/'/>
-    }
+    const {
+        username, 
+        setUsername, 
+        password, 
+        setPassword, 
+        login,  
+    } = useContext(AppContext)
+    const history = useHistory()
 
     return (
-        <Route path='/login'>
+        <Route exact path='/login'>
             <Typography variant='h5'>
                 Login
             </Typography>
@@ -31,7 +33,7 @@ const LoginPage = () => {
             <div style={{ height: '1rem' }} />
             <Button onClick={() => {
                 if (login(username, password)) {
-                    setRedirect(true)
+                    history.replace('/')
                 }
             }} color='primary' variant='contained'>Login</Button>
         </Route>

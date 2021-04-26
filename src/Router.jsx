@@ -60,12 +60,11 @@ const Router = () => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <BrowserRouter>
-                <Header />
                 <Switch>
                     <AppContextProvider>
+                        <Header />
                         <Container><Card><App /></Card></Container>
                     </AppContextProvider>
-                   Hello 
                 </Switch>
             </BrowserRouter>
         </ThemeProvider>

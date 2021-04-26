@@ -14,8 +14,7 @@ export const AppContextProvider = (props: {
 }) => {
     const [username, setUsername] = useState<string>(window.localStorage.getItem("user") || '')
     const [password, setPassword] = useState<string>('')
-
-    
+    const [isActive, setIsActive] = useState(false)
 
     const login = (username: string, password: string) => {
         window.localStorage.setItem("user", username)
@@ -25,28 +24,55 @@ export const AppContextProvider = (props: {
         })
     }
 
-    const state = {
-        username, setUsername,
-        password, setPassword,
-        login
+    const logout = (username: string) => {
+        return post("logout", {
+          username,
+        })
     }
 
-    useEffect(() => {
-        login(username, password)
+    const isUserActive = async (username: string) => {
+        const user = await post("is_active", {
+            username
+        })
+        return user.is_active
+    }
 
+
+    const state = {
+      username,
+      setUsername,
+      password,
+      setPassword,
+
+      login,
+      logout,
+      isUserActive,
+      isActive,
+      setIsActive,
+    };
+
+    useEffect(() => {
+        isUserActive(username).then(r => {
+            setIsActive(r)
+        });
+    })
+
+    useEffect(() => {
+        if (!isUserActive(username)) {
+            login(username, password)
+        }
         return () => {
-            post('logout', {
-                username,
-            })
-            pusher.unsubscribe("active-users");
+            logout(username)
         }
     }, [username, password])
 
     useEffect(() => {
         const activeUsers = pusher.subscribe("active-users");
         activeUsers.bind("changed-user", (data: any) => {
-            alert(JSON.stringify(data))
-        });
+
+        })
+
+        return () => pusher.unsubscribe("active-users")
     }, [])
 
     useBeforeunload(async (e) => {
