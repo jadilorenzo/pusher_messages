@@ -1,21 +1,62 @@
-import React, { createContext } from 'react'
+import React, { createContext, useState, useEffect } from 'react'
 import {post} from './api'
-// import Pusher from 'pusher-js'
+import { useBeforeunload } from 'react-beforeunload';
+import Pusher from 'pusher-js'
 
 export const AppContext = createContext<any>({})
+
+const pusher = new Pusher("922ac30666e5c94d5e7a", {
+    cluster: "us2",
+});
 
 export const AppContextProvider = (props: {
     children: any
 }) => {
-    const state = {
+    const [username, setUsername] = useState<string>(window.localStorage.getItem("user") || '')
+    const [password, setPassword] = useState<string>('')
+
+    
+
+    const login = (username: string, password: string) => {
+        window.localStorage.setItem("user", username)
+        return post('login', {
+            username,
+            password
+        })
     }
 
-    // console.log('provider', state)
-    const result = post('login', {
-        username: 'Jacob Di Lorenzo',
-        password: 'password'
+    const state = {
+        username, setUsername,
+        password, setPassword,
+        login
+    }
+
+    useEffect(() => {
+        login(username, password)
+
+        return () => {
+            post('logout', {
+                username,
+            })
+            pusher.unsubscribe("active-users");
+        }
+    }, [username, password])
+
+    useEffect(() => {
+        const activeUsers = pusher.subscribe("active-users");
+        activeUsers.bind("changed-user", (data: any) => {
+            alert(JSON.stringify(data))
+        });
+    }, [])
+
+    useBeforeunload(async (e) => {
+        const success = await post('logout', {
+            username,
+        })
+        if (success) {
+          e.preventDefault();
+        }
     })
-    console.log(result)
 
     return (
         <AppContext.Provider value={state}>

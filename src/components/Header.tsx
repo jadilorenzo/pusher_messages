@@ -21,7 +21,7 @@ const Header = () => {
                     </span>
                 </Typography>
                 <span style={{flexGrow: 1}}/>
-                <a href='/'><Button component='span'>Home</Button></a>
+                <a href='/login'><Button component='span'>Login</Button></a>
             </span>
         </header>
     )
