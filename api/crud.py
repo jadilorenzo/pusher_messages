@@ -1,33 +1,48 @@
-from sqlalchemy import text
-from sqlalchemy.orm import Session
-from models import User
+from sqlalchemy import update
+from models import User, Room
 from pusher_utils import update_active_users
+from database import db
 
-def get_user(db: Session, username):
+def get_user(username):
     """Get user based off id"""
     return db.query(User).filter(User.username == username).first()
 
-def login_user(db: Session, username: str, password: str, client):
+def login_user(username: str, password: str):
     """Set user status to be true if logged in properly"""
     if (db.query(User).filter((User.username == username) & (User.hashed_password == password)).first() != 0):
-        db.execute(text("UPDATE users SET is_active=:x WHERE username=:y"), [{"x": True, "y": username}])
-        update_active_users(db, client)
+        db.execute(update(User).where(User.username == username).values(is_active=True))
+        db.commit()
+        update_active_users()
     
         return True
     else:
         return False
 
-def logout_user(db: Session, username: str, client: any):
+def logout_user(username: str):
     """Log out for appropriate user"""
-    db.execute(text("UPDATE users SET is_active=:x WHERE username=:y"), [{"x": False, "y": username}])
-    update_active_users(db, client)
+    db.execute(update(User).where(User.username == username).values(is_active=False))
+    db.commit()
+    update_active_users()
 
     return True
     
-def create_user(db: Session, username: str, password: str):  
+def create_user(username: str, password: str):  
     """Add users to database"""  
-    user = User(username=username, password=password, is_active=False)
+    user = User(username=username, hashed_password=password, is_active=True)
     db.add(user)
     db.commit()
-    db.refresh(user)
-    return user
+    return True
+
+def get_users():
+    return db.query(User).all()
+
+
+def create_room(users: list):
+    """Add room to database"""
+    room = Room(user_ids=users)
+    db.add(room)
+    db.commit()
+    return room
+
+def get_rooms():
+    return db.query(Room).all()

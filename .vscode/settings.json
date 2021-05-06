@@ -1,0 +1,6 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.mypyEnabled": false,
+    "python.linting.enabled": false,
+    "python.pythonPath": "/usr/bin/python"
+}

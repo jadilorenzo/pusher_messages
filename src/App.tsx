@@ -1,20 +1,26 @@
-import React from 'react'
-import LoginPage from './components/Login'
+import React, { useContext } from 'react'
 import { Route } from 'react-router-dom'
-// import { useContext } from 'react'
-// import { AppContext } from './AppContext'
-
+import LoginPage from './components/Login'
+import MeetupPage from './components/Meetup'
+import SignupPage from './components/Signup'
+import RoomPage from './components/Room'
+import { AppContext } from './AppContext'
 
 const App = () => {
-    // const context = useContext(AppContext)    
+    const {rooms} = useContext(AppContext)
     return (
         <div>
+            <Route exact path="/">Landing Page</Route>
             <LoginPage />
-            <Route exact path="/">
-            App Page
-            </Route>
+            <MeetupPage />
+            <SignupPage />
+            {rooms.map((room: {id: number}) => {
+                return (
+                    <div key='id'><Route path={`/room/${room.id}`}><RoomPage {...room}/></Route></div>
+                )
+            })}
         </div>
-    );
+    )
 }
 
 export default App

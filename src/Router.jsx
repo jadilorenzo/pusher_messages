@@ -1,10 +1,11 @@
 import './Styles.css'
 import React from 'react'
-import { BrowserRouter, Switch} from 'react-router-dom'
-import { AppContextProvider } from './AppContext'
-import { ThemeProvider, createMuiTheme, useMediaQuery, CssBaseline, Card, Container } from '@material-ui/core'
+import { BrowserRouter, Switch } from 'react-router-dom'
+import {
+    ThemeProvider, createMuiTheme, useMediaQuery, CssBaseline, Card, Container,
+} from '@material-ui/core'
 import { blue /* green */ } from '@material-ui/core/colors'
-
+import { AppContextProvider } from './AppContext'
 import Header from './components/Header'
 import App from './App'
 
@@ -23,15 +24,15 @@ const Router = () => {
             MuiTypography: {
                 style: {
                     fontFamily: 'Assistant',
-                    fontWeight: 375
-                }
+                    fontWeight: 375,
+                },
             },
             MuiButtonBase: {
                 disableTouchRipple: true,
                 style: {
-                    fontFamily: 'Unica One',
-                    fontSize: '1.1rem'
-                }
+                    fontFamily: 'Fira Sans Condensed',
+                    fontSize: '1rem',
+                },
             },
             MuiContainer: {
                 maxWidth: 'md',
@@ -55,7 +56,6 @@ const Router = () => {
         'rgba(0, 0, 0, 0.1) 0.2rem 0.2rem',
     ]
 
-
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -63,7 +63,11 @@ const Router = () => {
                 <Switch>
                     <AppContextProvider>
                         <Header />
-                        <Container><Card><App /></Card></Container>
+                        <Container>
+                            <Card>
+                                <App />
+                            </Card>
+                        </Container>
                     </AppContextProvider>
                 </Switch>
             </BrowserRouter>
@@ -71,4 +75,7 @@ const Router = () => {
     )
 }
 
+
+
 export default Router
+
